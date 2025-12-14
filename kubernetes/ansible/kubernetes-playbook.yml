@@ -1,0 +1,19 @@
+- name: Kubernetes Control Plane Installation
+  hosts: controlplane
+  roles:
+    - control-plane
+
+- name: Kubernetes node01 Installation
+  hosts: node01,node02
+  roles:
+    - workers
+
+- name: Kubernetes Clean Installation
+  hosts: node02
+  roles:
+    - clean
+
+- name: Kubernetes Utilities Installation
+  hosts: controlplane
+  roles:
+    - utilities

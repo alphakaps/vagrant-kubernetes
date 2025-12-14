@@ -1,0 +1,42 @@
+- name: Check if flag file exists
+  ansible.builtin.stat:
+    path: "{{ playbook_dir }}/flag.txt"
+  delegate_to: localhost
+  register: flag
+
+- name: Copy of csr.conf & installUtilities.sh & metallb-config.yml & traefik-values.yml to the remote servers
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: $HOME
+    mode: '0755'
+  with_items:
+    - templates/csr.conf
+    - templates/installUtilities.sh
+    - templates/metallb-config.yml
+    - templates/traefik-values.yml
+  when: flag.stat.exists
+
+- name: Execute the installUtilities.sh script
+  command: /bin/sh $HOME/installUtilities.sh
+  when: flag.stat.exists
+
+- name: Deleting csr.conf & installUtilities.sh & metallb-config.yml & traefik-values.yml, tls.key, tls.crt, csr.csr to the remote servers
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - templates/csr.conf
+    - templates/installUtilities.sh
+    - templates/metallb-config.yml
+    - templates/traefik-values.yml
+    - templates/tls.key
+    - templates/tls.crt
+    - templates/csr.csr
+  when: flag.stat.exists
+
+- name: Remove flag file in localhost
+  ansible.builtin.file:
+    path: "{{ playbook_dir }}/flag.txt"
+    state: absent
+  delegate_to: localhost
+  when: flag.stat.exists

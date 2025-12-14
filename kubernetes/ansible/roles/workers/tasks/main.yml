@@ -1,0 +1,69 @@
+- name: Copy of config.sh & installNodes.sh to the remote servers
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: $HOME
+    mode: '0755'
+  with_items:
+    - templates/config.sh
+    - templates/installNodes.sh
+
+- name: Execute the config.sh script
+  command: $HOME/config.sh
+
+- name: Restart service containerd
+  ansible.builtin.service:
+    name: containerd
+    state: restarted
+  become: true
+
+- name: Enable service containerd
+  ansible.builtin.service:
+    name: containerd
+    enabled: yes
+  become: true
+
+- name: Execute the installNodes.sh script
+  command: $HOME/installNodes.sh
+
+- name: Copy join.sh to remote workers
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/join.sh"
+    dest: $HOME/join.sh
+    mode: '0755'
+
+- name: Execute the join.sh script
+  command: /bin/sh $HOME/join.sh
+
+- name: Deleting config.sh, installNodes.sh & join.sh files to the remote servers
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - $HOME/config.sh
+    - $HOME/installNodes.sh
+    - $HOME/join.sh
+
+- name: Adding controlplane ip address to the /etc/hosts
+  ansible.builtin.shell: "echo '{{ cp_ip }} {{ cp_hostname }}' >> /etc/hosts"
+  become: true
+
+- name: Adding Internal ip address to the /etc/default/kubelet
+  ansible.builtin.shell: "echo KUBELET_EXTRA_ARGS=\"--node-ip={{ kn01_ip }}\" > /etc/default/kubelet"
+  when: "kn01_ip is defined"
+  become: true
+
+- name: Adding Internal ip address to the /etc/default/kubelet
+  ansible.builtin.shell: "echo KUBELET_EXTRA_ARGS=\"--node-ip={{ kn02_ip }}\" > /etc/default/kubelet"
+  when: "kn02_ip is defined"
+  become: true
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+  become: true
+
+- name: Restart kubelet service
+  ansible.builtin.systemd_service:
+    name: kubelet
+    state: restarted
+  become: true
