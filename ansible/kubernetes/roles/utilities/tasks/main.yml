@@ -12,11 +12,11 @@
     - templates/authentik-values.yml
     - templates/pv.yml
     - templates/httproute-authentik.yml
-    - templates/app3-serviceaccount.yml
-    - templates/app3-deployment.yml
-    - templates/app3-service.yml
-    - templates/app3-middleware.yml
-    - templates/app3-httproute.yml
+    - templates/app-serviceaccount.yml
+    - templates/app-deployment.yml
+    - templates/app-service.yml
+    - templates/app-middleware.yml
+    - templates/app-httproute.yml
 
 - name: Execute the installUtilities.sh script
   command: /bin/sh $HOME/installUtilities.sh
@@ -34,11 +34,11 @@
     - $HOME/authentik-values.yml
     - $HOME/pv.yml
     - $HOME/httproute-authentik.yml
-    - $HOME/app3-serviceaccount.yml
-    - $HOME/app3-deployment.yml
-    - $HOME/app3-service.yml
-    - $HOME/app3-middleware.yml
-    - $HOME/app3-httproute.yml
+    - $HOME/app-serviceaccount.yml
+    - $HOME/app-deployment.yml
+    - $HOME/app-service.yml
+    - $HOME/app-middleware.yml
+    - $HOME/app-httproute.yml
     - $HOME/tls.key
     - $HOME/tls.crt
     - $HOME/csr.csr
