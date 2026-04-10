@@ -52,4 +52,5 @@ kubectl apply -f httproute-authentik.yml
 kubectl apply -f app3-serviceaccount.yml
 kubectl apply -f app3-deployment.yml
 kubectl apply -f app3-service.yml
+kubectl apply -f app3-middleware.yml
 kubectl apply -f app3-httproute.yml
