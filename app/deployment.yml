@@ -1,22 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helloworld
-  namespace: helloworld
+  name: app3
+  namespace: app3
   labels:
-    app: helloworld
+    app: app3
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: helloworld
+      app: app3
   template:
     metadata:
       labels:
-        app: helloworld
+        app: app3
     spec:
+      serviceAccountName: app3
       containers:
-      - name: helloworld
+      - name: app3
         image: alphakaps/helloworld
         ports:
         - containerPort: 8080

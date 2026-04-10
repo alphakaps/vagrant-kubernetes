@@ -1,14 +1,14 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: app3-httproute
-  namespace: app3
+  name: app-httproute
+  namespace: app
 spec:
   parentRefs:
   - name: traefik-gateway
     namespace: traefik
   hostnames:
-  - "app3.traefik.lc"
+  - "app.traefik.lc"
   rules:
     - filters:
       - type: ExtensionRef
@@ -21,6 +21,6 @@ spec:
           type: PathPrefix
           value: /
       backendRefs:
-      - name: app3-service
+      - name: app-service
         port: 8080
-        namespace: app3
+        namespace: app
