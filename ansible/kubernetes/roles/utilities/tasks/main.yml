@@ -15,6 +15,7 @@
     - templates/app3-serviceaccount.yml
     - templates/app3-deployment.yml
     - templates/app3-service.yml
+    - templates/app3-middleware.yml
     - templates/app3-httproute.yml
 
 - name: Execute the installUtilities.sh script
@@ -36,6 +37,7 @@
     - $HOME/app3-serviceaccount.yml
     - $HOME/app3-deployment.yml
     - $HOME/app3-service.yml
+    - $HOME/app3-middleware.yml
     - $HOME/app3-httproute.yml
     - $HOME/tls.key
     - $HOME/tls.crt

@@ -10,7 +10,13 @@ spec:
   hostnames:
   - "app3.traefik.lc"
   rules:
-    - matches:
+    - filters:
+      - type: ExtensionRef
+        extensionRef:
+          group: traefik.io
+          kind: Middleware
+          name: authentik-forwardauth
+      matches:
       - path:
           type: PathPrefix
           value: /
