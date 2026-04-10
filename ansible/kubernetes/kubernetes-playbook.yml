@@ -1,0 +1,31 @@
+- name: Kubernetes Control Plane Installation
+  hosts: controlplane
+  roles:
+    - control-plane
+
+- name: Kubernetes node01 Installation
+  hosts: node01,node02
+  roles:
+    - workers
+
+- name: Kubernetes Clean Installation
+  hosts: node02
+  roles:
+    - clean
+
+- name: Kubernetes Utilities Installation
+  hosts: controlplane
+  gather_facts: false
+  tags: [utilities]
+  pre_tasks:
+    - name: Check how many nodes have joined the cluster
+      ansible.builtin.command: kubectl get nodes --no-headers
+      register: cluster_nodes
+      changed_when: false
+      failed_when: false
+
+    - name: Skip utilities — cluster not fully ready (requires controlplane + node01 + node02)
+      ansible.builtin.meta: end_play
+      when: cluster_nodes.stdout_lines | length < 3
+  roles:
+    - utilities

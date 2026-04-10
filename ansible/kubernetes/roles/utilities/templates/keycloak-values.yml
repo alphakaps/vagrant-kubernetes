@@ -1,0 +1,58 @@
+# Global PostgreSQL settings
+global:
+  postgresql:
+    auth:
+      database: "keycloak"
+      username: "admin"
+      password: "password"
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+  security:
+    allowInsecureImages: true
+
+metrics:
+  image:
+    repository: bitnamilegacy/postgres-exporter
+
+image:
+  repository: bitnamilegacy/keycloak
+
+# Keycloak Admin User Configuration
+auth:
+  adminUser: admin
+  adminPassword: password
+
+# PostgreSQL Specific Configuration
+postgresql:
+  enabled: true
+  auth:
+    database: "keycloak"
+    username: "admin"
+    password: "password"    
+  image:
+    repository: bitnamilegacy/postgresql
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+    enabled: true
+
+# Kubernetes Service Configuration
+service:
+  type: NodePort
+  nodePorts:
+    http: 30080
+
+# Additional Keycloak Environment Variables
+extraEnvVars:
+  # Enable production mode to prevent thread blocking
+  - name: KC_PRODUCTION
+    value: "true"
+  - name: KC_HOSTNAME_STRICT
+    value: "false"
+  - name: KC_HTTP_ENABLED
+    value: "true"
+  - name: VERTX_WORKER_POOL_SIZE
+    value: "20"
+  - name: VERTX_EVENT_LOOP_POOL_SIZE
+    value: "8"

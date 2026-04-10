@@ -1,0 +1,61 @@
+# Global PostgreSQL settings
+global:
+  postgresql:
+    auth:
+      database: "postgres"
+      username: "admin"
+      password: "password"
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+  security:
+    allowInsecureImages: true
+
+metrics:
+  image:
+    repository: bitnamilegacy/postgres-exporter
+
+image:
+  repository: bitnamilegacy/keycloak
+
+# Keycloak Admin User Configuration
+auth:
+  adminUser: admin
+  adminPassword: password
+
+# PostgreSQL Specific Configuration
+postgresql:
+  enabled: true
+  auth:
+    database: "postgres"
+    username: "admin"
+    password: "password"    
+  image:
+    repository: bitnamilegacy/postgresql
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+    enabled: true
+
+# Kubernetes Service Configuration
+service:
+  type: NodePort
+  nodePorts:
+    http: 30080
+
+# Additional Keycloak Environment Variables
+extraEnvVars:
+  - name: KEYCLOAK_DATABASE_HOST
+    value: "10.96.127.186"
+  - name: KEYCLOAK_DATABASE_NAME
+    value: "postgres"
+  - name: KEYCLOAK_DATABASE_USER
+    value: "admin"
+  - name: KEYCLOAK_DATABASE_PORT
+    value: "5432"
+  - name: KEYCLOAK_PRODUCTION
+    value: "false"
+  - name: KEYCLOAK_LOG_LEVEL
+    value: "DEBUG"
+  - name: KEYCLOAK_ENABLE_HTTPS
+    value: "false"

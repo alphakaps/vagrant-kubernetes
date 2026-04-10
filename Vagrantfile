@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
     cp.vm.network "private_network", ip: "192.168.2.16"
 
     cp.vm.provision "ansible" do | ansible |
-      ansible.playbook = "kubernetes/ansible/kubernetes-playbook.yml"
+      ansible.playbook = "ansible/kubernetes/kubernetes-playbook.yml"
       ansible.compatibility_mode = "2.0"
       # Adding node01 and node02 ip address and hostname in variables
       ansible.extra_vars = {
@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
     kn01.vm.network "private_network", ip: "192.168.2.17"
     
     kn01.vm.provision "ansible" do | ansible |
-      ansible.playbook = "kubernetes/ansible/kubernetes-playbook.yml"
+      ansible.playbook = "ansible/kubernetes/kubernetes-playbook.yml"
       ansible.compatibility_mode = "2.0"
       # Adding controlplane ip address and hostname in variables
       ansible.extra_vars = {
@@ -62,12 +62,25 @@ Vagrant.configure("2") do |config|
     kn02.vm.network "private_network", ip: "192.168.2.18"
 
     kn02.vm.provision "ansible" do | ansible |
-      ansible.playbook = "kubernetes/ansible/kubernetes-playbook.yml"
+      ansible.playbook = "ansible/kubernetes/kubernetes-playbook.yml"
       ansible.compatibility_mode = "2.0"
       ansible.extra_vars = {
         kn02_ip: "192.168.2.18",
         cp_ip: "192.168.2.16",
         cp_hostname: "controlplane"
+      }
+    end
+
+    # Runs utilities on controlplane only after controlplane + node01 + node02 are all up
+    kn02.vm.provision "ansible" do | ansible |
+      ansible.playbook = "ansible/kubernetes/kubernetes-playbook.yml"
+      ansible.compatibility_mode = "2.0"
+      ansible.limit = "controlplane"
+      ansible.tags = "utilities"
+      ansible.extra_vars = {
+        cp_ip: "192.168.2.16",
+        kn01_ip: "192.168.2.17",
+        kn02_ip: "192.168.2.18"
       }
     end
 

@@ -1,0 +1,12 @@
+- name: Check if join.sh file exists
+  ansible.builtin.stat:
+    path: "{{ playbook_dir }}/join.sh"
+  delegate_to: localhost
+  register: file_status
+
+- name: Remove join.sh file in localhost
+  ansible.builtin.file:
+    path: "{{ playbook_dir }}/join.sh"
+    state: absent
+  delegate_to: localhost
+  when: file_status.stat.exists
