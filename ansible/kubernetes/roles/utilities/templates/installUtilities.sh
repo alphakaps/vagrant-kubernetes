@@ -3,7 +3,7 @@ kubectl create namespace metallb-system
 kubectl create namespace traefik
 kubectl create namespace keycloak
 kubectl create namespace authentik
-kubectl create namespace app3
+kubectl create namespace app
 
 kubectl get configmap/kube-proxy -n kube-system -o yaml | sed 's/strictARP: false/strictARP: true/g' | kubectl apply -f - > /dev/null 2>&1
 kubectl rollout restart daemonset.apps/kube-proxy -n kube-system
@@ -48,9 +48,9 @@ kubectl apply -f pv.yml
 helm install authentik authentik/authentik -n authentik -f authentik-values.yml
 kubectl apply -f httproute-authentik.yml
 
-# app3 deployment
-kubectl apply -f app3-serviceaccount.yml
-kubectl apply -f app3-deployment.yml
-kubectl apply -f app3-service.yml
-kubectl apply -f app3-middleware.yml
-kubectl apply -f app3-httproute.yml
+# app deployment
+kubectl apply -f app-serviceaccount.yml
+kubectl apply -f app-deployment.yml
+kubectl apply -f app-service.yml
+kubectl apply -f app-middleware.yml
+kubectl apply -f app-httproute.yml
