@@ -1,4 +1,4 @@
-- name: Copy of csr.conf & installUtilities.sh & metallb-config.yml & traefik-values.yml && keycloak-values.yml to the remote servers
+- name: Copy of csr.conf & installUtilities.sh & metallb-config.yml & traefik-values.yml && keycloak-values.yml & authentik-values.yml & pv.yml & httproute-authentik.yml to the remote servers
   ansible.builtin.template:
     src: "{{ item }}"
     dest: $HOME
@@ -9,11 +9,14 @@
     - templates/metallb-config.yml
     - templates/traefik-values.yml
     - templates/keycloak-values.yml
+    - templates/authentik-values.yml
+    - templates/pv.yml
+    - templates/httproute-authentik.yml
 
 - name: Execute the installUtilities.sh script
   command: /bin/sh $HOME/installUtilities.sh
 
-- name: Deleting csr.conf & installUtilities.sh & metallb-config.yml & traefik-values.yml && keycloak-values.yml, tls.key, tls.crt, csr.csr to the remote servers
+- name: Deleting csr.conf & installUtilities.sh & metallb-config.yml & traefik-values.yml && keycloak-values.yml & authentik-values.yml & pv.yml & httproute-authentik.yml, tls.key, tls.crt, csr.csr to the remote servers
   ansible.builtin.file:
     path: "{{ item }}"
     state: absent
@@ -23,6 +26,9 @@
     - $HOME/metallb-config.yml
     - $HOME/traefik-values.yml
     - $HOME/keycloak-values.yml
+    - $HOME/authentik-values.yml
+    - $HOME/pv.yml
+    - $HOME/httproute-authentik.yml
     - $HOME/tls.key
     - $HOME/tls.crt
     - $HOME/csr.csr
