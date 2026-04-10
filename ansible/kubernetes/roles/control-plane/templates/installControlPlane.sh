@@ -29,6 +29,14 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # Flanel Installation
 kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
 
+# Patch Flannel to use the private network interface (eth1) instead of the
+# Vagrant NAT interface (eth0/10.0.2.15), which is shared by all VMs and
+# breaks cross-node pod communication (DNS, service discovery, etc.)
+kubectl rollout status daemonset/kube-flannel-ds -n kube-flannel --timeout=60s
+kubectl patch daemonset kube-flannel-ds -n kube-flannel --type=json \
+  -p='[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--iface=eth1"}]'
+kubectl rollout status daemonset/kube-flannel-ds -n kube-flannel --timeout=60s
+
 joinNode=$(kubeadm token create --print-join-command)
 echo "sudo $joinNode" > $HOME/join.sh
 chmod +x $HOME/join.sh
