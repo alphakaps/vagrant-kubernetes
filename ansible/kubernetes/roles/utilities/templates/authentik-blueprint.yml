@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authentik-blueprints
+  namespace: authentik
+data:
+  app-forwardauth.yaml: |
+    version: 1
+    metadata:
+      name: app-forwardauth-setup
+    entries:
+      - model: authentik_providers_proxy.proxyprovider
+        state: present
+        identifiers:
+          name: app-provider
+        attrs:
+          name: app-provider
+          authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+          invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+          external_host: https://app.traefik.lc
+          mode: forward_single
+
+      - model: authentik_core.application
+        state: present
+        identifiers:
+          slug: app
+        attrs:
+          name: app
+          slug: app
+          provider: !Find [authentik_providers_proxy.proxyprovider, [name, app-provider]]
+
+      - model: authentik_outposts.outpost
+        state: present
+        identifiers:
+          name: authentik Embedded Outpost
+        attrs:
+          name: authentik Embedded Outpost
+          type: proxy
+          config:
+            authentik_host: https://authentik.traefik.lc
+            authentik_host_insecure: true
+          providers:
+            - !Find [authentik_providers_proxy.proxyprovider, [name, app-provider]]

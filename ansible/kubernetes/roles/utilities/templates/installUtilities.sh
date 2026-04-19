@@ -44,6 +44,9 @@ volumeBindingMode: Immediate
 EOF
 kubectl apply -f pv.yml
 
+# Authentik blueprint ConfigMap (must exist before helm install so the worker picks it up on first boot)
+kubectl apply -f authentik-blueprint.yml
+
 # Authentik installation
 helm install authentik authentik/authentik -n authentik -f authentik-values.yml
 kubectl apply -f httproute-authentik.yml
