@@ -13,10 +13,10 @@
     path: /mnt/prometheus
     state: directory
     owner: "1000"
-    group: "1000"
-    mode: '0755'
+    group: "2000"
+    mode: '0777'
   become: true
-  when: inventory_hostname == 'node01'
+  when: inventory_hostname == 'node02'
 
 - name: Copy of config.sh & installNodes.sh to the remote servers
   ansible.builtin.template:

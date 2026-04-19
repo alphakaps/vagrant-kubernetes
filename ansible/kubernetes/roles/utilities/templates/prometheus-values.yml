@@ -7,7 +7,7 @@ prometheus:
   prometheusSpec:
     retention: 10d
     nodeSelector:
-      kubernetes.io/hostname: node01
+      kubernetes.io/hostname: node02
     storageSpec:
       volumeClaimTemplate:
         spec:
