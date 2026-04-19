@@ -59,6 +59,7 @@ kubectl apply -f app-deployment.yml
 kubectl apply -f app-service.yml
 kubectl apply -f app-middleware.yml
 kubectl apply -f app-httproute.yml
+kubectl apply -f app-servicemonitor.yml
 
 # Prometheus stack
 kubectl apply -f pv-prometheus.yml

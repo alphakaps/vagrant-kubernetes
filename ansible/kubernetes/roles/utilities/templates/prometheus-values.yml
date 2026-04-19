@@ -1,3 +1,6 @@
+kubeStateMetrics:
+  enabled: true
+
 prometheus:
   ingress:
     enabled: false
@@ -13,6 +16,10 @@ prometheus:
           resources:
             requests:
               storage: 10Gi
+    # Discover ServiceMonitors across all namespaces
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
 
 alertmanager:
   ingress:
@@ -33,3 +40,18 @@ grafana:
       auto_sign_up: true
     auth:
       disable_login_form: true
+  # Community dashboards pulled from grafana.com at startup
+  dashboards:
+    default:
+      traefik:
+        gnetId: 17347
+        revision: 9
+        datasource: Prometheus
+      node-exporter-full:
+        gnetId: 1860
+        revision: 37
+        datasource: Prometheus
+      kubernetes-views-pods:
+        gnetId: 15760
+        revision: 28
+        datasource: Prometheus
