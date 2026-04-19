@@ -18,6 +18,7 @@
     - templates/app-service.yml
     - templates/app-middleware.yml
     - templates/app-httproute.yml
+    - templates/app-servicemonitor.yml
     - templates/prometheus-values.yml
     - templates/pv-prometheus.yml
     - templates/prometheus-middleware.yml
@@ -45,6 +46,7 @@
     - $HOME/app-service.yml
     - $HOME/app-middleware.yml
     - $HOME/app-httproute.yml
+    - $HOME/app-servicemonitor.yml
     - $HOME/prometheus-values.yml
     - $HOME/pv-prometheus.yml
     - $HOME/prometheus-middleware.yml
