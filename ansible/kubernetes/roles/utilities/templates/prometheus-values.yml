@@ -1,0 +1,35 @@
+prometheus:
+  ingress:
+    enabled: false
+  prometheusSpec:
+    retention: 10d
+    nodeSelector:
+      kubernetes.io/hostname: node01
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-storage
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+
+alertmanager:
+  ingress:
+    enabled: false
+  alertmanagerSpec:
+    storage: {}
+
+grafana:
+  ingress:
+    enabled: false
+  persistence:
+    enabled: false
+  grafana.ini:
+    auth.proxy:
+      enabled: true
+      header_name: X-authentik-username
+      header_property: username
+      auto_sign_up: true
+    auth:
+      disable_login_form: true
