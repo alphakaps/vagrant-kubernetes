@@ -18,6 +18,10 @@
     - templates/app-service.yml
     - templates/app-middleware.yml
     - templates/app-httproute.yml
+    - templates/prometheus-values.yml
+    - templates/pv-prometheus.yml
+    - templates/prometheus-middleware.yml
+    - templates/prometheus-httproutes.yml
 
 - name: Execute the installUtilities.sh script
   command: /bin/sh $HOME/installUtilities.sh
@@ -41,6 +45,10 @@
     - $HOME/app-service.yml
     - $HOME/app-middleware.yml
     - $HOME/app-httproute.yml
+    - $HOME/prometheus-values.yml
+    - $HOME/pv-prometheus.yml
+    - $HOME/prometheus-middleware.yml
+    - $HOME/prometheus-httproutes.yml
     - $HOME/tls.key
     - $HOME/tls.crt
     - $HOME/csr.csr

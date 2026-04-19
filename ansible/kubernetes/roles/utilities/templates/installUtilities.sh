@@ -4,6 +4,7 @@ kubectl create namespace traefik
 kubectl create namespace keycloak
 kubectl create namespace authentik
 kubectl create namespace app
+kubectl create namespace monitoring
 
 kubectl get configmap/kube-proxy -n kube-system -o yaml | sed 's/strictARP: false/strictARP: true/g' | kubectl apply -f - > /dev/null 2>&1
 kubectl rollout restart daemonset.apps/kube-proxy -n kube-system
@@ -12,6 +13,7 @@ helm repo add metallb https://metallb.github.io/metallb
 helm repo add traefik https://traefik.github.io/charts
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo add authentik https://charts.goauthentik.io
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 
 helm install metallb metallb/metallb --namespace metallb-system
@@ -57,3 +59,9 @@ kubectl apply -f app-deployment.yml
 kubectl apply -f app-service.yml
 kubectl apply -f app-middleware.yml
 kubectl apply -f app-httproute.yml
+
+# Prometheus stack
+kubectl apply -f pv-prometheus.yml
+helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack -n monitoring -f prometheus-values.yml
+kubectl apply -f prometheus-middleware.yml
+kubectl apply -f prometheus-httproutes.yml
