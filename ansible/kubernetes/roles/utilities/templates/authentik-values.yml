@@ -15,6 +15,16 @@ server:
         hosts:
             - authentik.traefik.lc
 
+worker:
+    volumes:
+        - name: blueprints-custom
+          configMap:
+              name: authentik-blueprints
+    volumeMounts:
+        - name: blueprints-custom
+          mountPath: /blueprints/custom
+          readOnly: true
+
 postgresql:
     enabled: true
     auth:

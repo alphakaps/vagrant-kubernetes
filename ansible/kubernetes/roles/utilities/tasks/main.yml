@@ -10,6 +10,7 @@
     - templates/traefik-values.yml
     - templates/keycloak-values.yml
     - templates/authentik-values.yml
+    - templates/authentik-blueprint.yml
     - templates/pv.yml
     - templates/httproute-authentik.yml
     - templates/app-serviceaccount.yml
@@ -32,6 +33,7 @@
     - $HOME/traefik-values.yml
     - $HOME/keycloak-values.yml
     - $HOME/authentik-values.yml
+    - $HOME/authentik-blueprint.yml
     - $HOME/pv.yml
     - $HOME/httproute-authentik.yml
     - $HOME/app-serviceaccount.yml

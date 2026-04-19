@@ -1,3 +1,13 @@
+- name: Create /mnt/data for authentik postgresql hostPath volume
+  ansible.builtin.file:
+    path: /mnt/data
+    state: directory
+    owner: "1001"
+    group: "1001"
+    mode: '0755'
+  become: true
+  when: inventory_hostname == 'node01'
+
 - name: Copy of config.sh & installNodes.sh to the remote servers
   ansible.builtin.template:
     src: "{{ item }}"
