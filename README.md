@@ -70,6 +70,14 @@ flowchart TD
     style n1 fill:#FFFBEB,stroke:#D97706
     style n2 fill:#FAF5FF,stroke:#7C3AED
     style Blueprint fill:#FFFBEB,stroke:#D97706
+
+    click User href "https://app.traefik.lc" "Open app" _blank
+    click Traefik href "https://dashboard.traefik.lc/dashboard/" "Traefik dashboard" _blank
+    click AuthServer href "https://authentik.traefik.lc" "Authentik SSO" _blank
+    click App href "https://app.traefik.lc" "Sample app" _blank
+    click Prometheus href "https://prometheus.traefik.lc" "Prometheus UI" _blank
+    click Grafana href "https://grafana.traefik.lc" "Grafana dashboards" _blank
+    click Alertmanager href "https://alertmanager.traefik.lc" "Alertmanager UI" _blank
 ```
 
 ---
