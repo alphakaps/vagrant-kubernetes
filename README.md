@@ -2,7 +2,75 @@
 
 A fully automated 3-node Kubernetes homelab provisioned with **Vagrant** and **Ansible**. One `vagrant up` brings up the entire cluster with SSO, observability, TLS termination, and a sample application — no manual steps required.
 
-![Architecture](k8s_homelab_schema.png)
+```mermaid
+flowchart TD
+    User(["🌐 Browser / User\nhttps://*.traefik.lc"])
+
+    subgraph lb["MetalLB — LoadBalancer (192.168.2.200)"]
+        MetalLB["BGP/ARP · single VIP"]
+    end
+
+    subgraph gw["Traefik — Gateway API · TLS Termination"]
+        Traefik["app · authentik · prometheus\nalertmanager · grafana · dashboard"]
+        ForwardAuth["🔒 ForwardAuth\nAuthentik Embedded Outpost\nvalidates every request"]
+        Traefik -- auth check --> ForwardAuth
+    end
+
+    subgraph cp["controlplane (192.168.2.16)"]
+        TraefikPod["traefik pod"]
+        NodeExpCP["node-exporter"]
+    end
+
+    subgraph n1["node01 (192.168.2.17)"]
+        AuthServer["authentik-server\nUI · API · SSO flows"]
+        AuthWorker["authentik-worker\nblueprints · tasks"]
+        Postgres["postgresql\n/mnt/data (PV)"]
+        Redis["redis\nsession cache"]
+        Blueprint[["Blueprint ConfigMap\n/blueprints/custom/"]]
+        App["app (helloworld)\nns: app · /metrics"]
+        NodeExpN1["node-exporter"]
+        AuthServer --> Postgres
+        AuthServer --> Redis
+        AuthWorker --> Postgres
+        AuthWorker --> Redis
+        Blueprint -. mounted .-> AuthWorker
+    end
+
+    subgraph n2["node02 (192.168.2.18)"]
+        Prometheus["prometheus\n10d retention · /mnt/prometheus (PV)"]
+        Grafana["grafana\ndashboards · auth proxy"]
+        Alertmanager["alertmanager\nalert routing"]
+        KSM["kube-state-metrics"]
+        PromOperator["prometheus-operator\nServiceMonitor CRDs"]
+        NodeExpN2["node-exporter"]
+        Grafana -- datasource --> Prometheus
+        Prometheus -. alerts .-> Alertmanager
+        Prometheus -. k8s metrics .-> KSM
+    end
+
+    User -- HTTPS --> MetalLB
+    MetalLB --> Traefik
+    ForwardAuth -. validate .-> AuthServer
+
+    Traefik -- authentik.traefik.lc --> AuthServer
+    Traefik -- app.traefik.lc --> App
+    Traefik -- prometheus.traefik.lc --> Prometheus
+    Traefik -- grafana.traefik.lc --> Grafana
+    Traefik -- alertmanager.traefik.lc --> Alertmanager
+
+    Prometheus -. scrape /metrics .-> App
+    Prometheus -. node metrics .-> NodeExpCP
+    Prometheus -. node metrics .-> NodeExpN1
+    Prometheus -. node metrics .-> NodeExpN2
+
+    style ForwardAuth fill:#FFF1F2,stroke:#DC2626,color:#DC2626
+    style lb fill:#F5F3FF,stroke:#7C3AED
+    style gw fill:#ECFEFF,stroke:#0891B2
+    style cp fill:#F0FDF4,stroke:#16A34A
+    style n1 fill:#FFFBEB,stroke:#D97706
+    style n2 fill:#FAF5FF,stroke:#7C3AED
+    style Blueprint fill:#FFFBEB,stroke:#D97706
+```
 
 ---
 
