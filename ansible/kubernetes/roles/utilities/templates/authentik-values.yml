@@ -1,5 +1,8 @@
 authentik:
     secret_key: "6zWen62yrLGtZJbNae148WF7vimQCaM0Xb2McJvwbT0KSEWH9PkosIs4GQQQldfq2AeaopBxUZFmwUYW"
+    # akadmin credentials, applied only when the database is first created (lab only)
+    bootstrap_password: "{{ authentik_bootstrap_password | default('') }}"
+    bootstrap_email: "admin@traefik.lc"
     # This sends anonymous usage-data, stack traces on errors and
     # performance data to sentry.io, and is fully opt-in
     error_reporting:

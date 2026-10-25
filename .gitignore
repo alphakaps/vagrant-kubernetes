@@ -1,3 +1,4 @@
 .vagrant/
 ansible/kubernetes/join.sh
 .DS_Store
+ansible/kubernetes/group_vars/all/secrets.yml

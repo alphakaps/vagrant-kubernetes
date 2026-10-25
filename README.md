@@ -150,13 +150,13 @@ All services are exposed over HTTPS with a self-signed certificate (accept the b
 | Service | URL | Credentials |
 |---|---|---|
 | Traefik dashboard | https://dashboard.traefik.lc | `admin` / `password` |
-| Authentik | https://authentik.traefik.lc | `akadmin` / set on first login |
+| Authentik | https://authentik.traefik.lc | `akadmin` / from `group_vars/all/secrets.yml` |
 | Sample app | https://app.traefik.lc | via Authentik SSO |
 | Prometheus | https://prometheus.traefik.lc | via Authentik SSO |
 | Alertmanager | https://alertmanager.traefik.lc | via Authentik SSO |
 | Grafana | https://grafana.traefik.lc | via Authentik SSO |
 
-> Authentik requires a one-time password setup on first login at https://authentik.traefik.lc/if/flow/initial-setup/
+> Before `vagrant up`, copy `ansible/kubernetes/group_vars/all/secrets.yml.example` to `secrets.yml` (gitignored) and set `authentik_bootstrap_password`. It becomes the `akadmin` password when the Authentik database is first created. Without it, set the password once at https://authentik.traefik.lc/if/flow/initial-setup/
 
 ---
 
@@ -224,4 +224,4 @@ vagrant destroy -f
 - Self-signed TLS certificate — browsers will show a security warning
 - No external DNS; `/etc/hosts` entries must be added manually on the host
 - hostPath volumes are tied to specific nodes — data is lost on `vagrant destroy`
-- Authentik initial password must be set manually via the setup flow URL
+- The Authentik admin password lives in a local, gitignored `secrets.yml`
