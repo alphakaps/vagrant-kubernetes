@@ -14,8 +14,14 @@ server:
         enabled: true
         hosts:
             - authentik.traefik.lc
+    # First boot runs all DB migrations, which takes >10 min on the 2 CPU / 2 GB VMs.
+    # Allow 30 min so the probe doesn't kill the server mid-migration (restart loop).
+    startupProbe:
+        failureThreshold: 180
 
 worker:
+    startupProbe:
+        failureThreshold: 180
     volumes:
         - name: blueprints-custom
           configMap:

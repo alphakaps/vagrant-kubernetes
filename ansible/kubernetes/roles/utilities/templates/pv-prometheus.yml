@@ -9,6 +9,10 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
+  # Reserved for Prometheus so another claim can't take it
+  claimRef:
+    namespace: monitoring
+    name: prometheus-kube-prometheus-stack-prometheus-db-prometheus-kube-prometheus-stack-prometheus-0
   nodeAffinity:
     required:
       nodeSelectorTerms:

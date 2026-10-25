@@ -24,7 +24,9 @@ openssl req -new -newkey rsa:2048 -nodes -keyout tls.key -out csr.csr -config cs
 openssl x509 -req -days 365 -in csr.csr -signkey tls.key -out tls.crt
 kubectl create secret tls local-selfsigned-tls  --cert=tls.crt --key=tls.key --namespace traefik
 
-helm install traefik traefik/traefik -n traefik -f traefik-values.yml
+# The Traefik chart no longer ships Gateway API CRDs, install them first
+kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.3/standard-install.yaml
+helm install traefik traefik/traefik --version 42.1.3 -n traefik -f traefik-values.yml
 kubectl rollout restart deployment.apps/traefik -n traefik
 
 helm install keycloak bitnami/keycloak --version 24.4.9 -n keycloak -f values.yml

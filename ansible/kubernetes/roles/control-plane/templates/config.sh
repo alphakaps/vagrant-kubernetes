@@ -31,7 +31,14 @@ echo -e "Containerd Configuration"
 sudo containerd config default | sudo tee /etc/containerd/config.toml
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
 
-sudo snap install helm --classic
+# Helm from the official release tarball (the Snap Store times out from the VMs)
+HELM_VERSION=v3.22.0
+curl -fsSLO https://get.helm.sh/helm-$HELM_VERSION-linux-amd64.tar.gz
+curl -fsSL https://get.helm.sh/helm-$HELM_VERSION-linux-amd64.tar.gz.sha256sum | sha256sum -c -
+tar -xzf helm-$HELM_VERSION-linux-amd64.tar.gz linux-amd64/helm
+sudo install -m 0755 linux-amd64/helm /usr/local/bin/helm
+rm -rf helm-$HELM_VERSION-linux-amd64.tar.gz linux-amd64
+helm version --short || { echo "Helm installation failed"; exit 1; }
 
 source <(kubectl completion bash)
 
