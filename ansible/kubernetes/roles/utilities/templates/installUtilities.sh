@@ -52,7 +52,7 @@ kubectl apply -f pv.yml
 kubectl apply -f authentik-blueprint.yml
 
 # Authentik installation
-helm install authentik authentik/authentik -n authentik -f authentik-values.yml
+helm install authentik authentik/authentik --version 2026.8.5 -n authentik -f authentik-values.yml
 kubectl apply -f httproute-authentik.yml
 
 # app deployment

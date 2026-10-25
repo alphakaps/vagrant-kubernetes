@@ -54,6 +54,14 @@
 - name: Execute the join.sh script
   command: /bin/sh $HOME/join.sh
 
+# Pull the Authentik image (~380 MB) in the background so it's cached before
+# the utilities play installs Authentik. Keep the tag in sync with the chart version.
+- name: Pre-pull the Authentik image
+  ansible.builtin.command: ctr -n k8s.io images pull ghcr.io/goauthentik/server:2026.8.5
+  become: true
+  async: 1800
+  poll: 0
+
 - name: Deleting config.sh, installNodes.sh & join.sh files to the remote servers
   ansible.builtin.file:
     path: "{{ item }}"

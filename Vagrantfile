@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
 
     kn01.vm.provider "virtualbox" do | vm |
       vm.customize ["modifyvm", :id, "--name", "node01"]
-      vm.customize ["modifyvm", :id, "--memory", "2048"]
+      vm.customize ["modifyvm", :id, "--memory", "4096"]
       vm.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       vm.customize ["modifyvm", :id, "--cpus", "2"]
     end
@@ -86,7 +86,7 @@ Vagrant.configure("2") do |config|
 
     kn02.vm.provider "virtualbox" do | vm |
       vm.customize ["modifyvm", :id, "--name", "node02"]
-      vm.customize ["modifyvm", :id, "--memory", "2048"]
+      vm.customize ["modifyvm", :id, "--memory", "4096"]
       vm.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       vm.customize ["modifyvm", :id, "--cpus", "2"]
     end

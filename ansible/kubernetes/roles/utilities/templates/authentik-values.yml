@@ -3,7 +3,10 @@ authentik:
     # This sends anonymous usage-data, stack traces on errors and
     # performance data to sentry.io, and is fully opt-in
     error_reporting:
-        enabled: true
+        enabled: false
+    # 1 web process instead of 2: saves a few hundred MB on the 4 GB nodes
+    web:
+        workers: 1
     postgresql:
         password: "wylcpVAmRao0bk1m4ZEW9RdG9A2N2dxyxxmCs30UwbjjWL5uXm"
 
@@ -18,10 +21,27 @@ server:
     # Allow 30 min so the probe doesn't kill the server mid-migration (restart loop).
     startupProbe:
         failureThreshold: 180
+    resources:
+        requests:
+            memory: 768Mi
 
 worker:
     startupProbe:
         failureThreshold: 180
+    resources:
+        requests:
+            memory: 768Mi
+    # Keep the worker off the server's node so they don't fight for memory
+    affinity:
+        podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                      topologyKey: kubernetes.io/hostname
+                      labelSelector:
+                          matchLabels:
+                              app.kubernetes.io/name: authentik
+                              app.kubernetes.io/component: server
     volumes:
         - name: blueprints-custom
           configMap:
